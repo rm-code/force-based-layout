@@ -52,6 +52,7 @@ function MainScreen.new()
     end
 
     local function gravitate(node, x1, y1, x2, y2)
+        local k = 0.0016;
         local dx, dy = x1 - x2, y1 - y2;
         local r = math.sqrt(dx * dx + dy * dy);
 
@@ -59,13 +60,9 @@ function MainScreen.new()
         dx = dx / r;
         dy = dy / r;
 
-        local force = 1000 * ((1 * 1) / math.pow(r, 2));
-        force = math.min(force, 1);
-
-        dx = dx * force;
-        dy = dy * force;
-
-        node:applyForce(-dx, -dy);
+        -- Calculate spring force and apply it.
+        local force = -k * r;
+        node:applyForce(dx * force, dy * force);
     end
 
     function self:update(dt)
