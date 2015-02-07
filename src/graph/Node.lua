@@ -73,6 +73,10 @@ function Node.new(x, y)
         return py;
     end
 
+    function self:damp(f)
+        vx, vy = vx * f, vy * f;
+    end
+
     return self;
 end
 

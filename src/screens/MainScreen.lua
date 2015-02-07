@@ -65,6 +65,27 @@ function MainScreen.new()
         node:applyForce(dx * force, dy * force);
     end
 
+    local function repulse(a, b)
+        local charge = 800;
+        local mag = 0.1;
+
+        -- Calculate distance vector.
+        local dx, dy = a:getX() - b:getX(), a:getY() - b:getY();
+        local distance = math.sqrt(dx * dx + dy * dy);
+        distance = math.max(0.001, math.min(distance, 100));
+
+        -- Normalise vector.
+        dx = dx / distance;
+        dy = dy / distance;
+
+        -- Calculate force's strength and apply it to the vector.
+        local strength = charge * ((mag * mag) / (distance * distance));
+        dx = dx * strength;
+        dy = dy * strength;
+
+        a:applyForce(dx, dy);
+    end
+
     function self:update(dt)
         if love.mouse.isDown('l') then
             if timer <= 0 then
@@ -75,9 +96,17 @@ function MainScreen.new()
             end
         end
 
-        for id, node in ipairs(nodes) do
-            gravitate(node, node:getX(), node:getY(), love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5);
-            node:update(dt);
+        for idA, nodeA in ipairs(nodes) do
+            gravitate(nodeA, nodeA:getX(), nodeA:getY(), love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5);
+
+            for idB, nodeB in ipairs(nodes) do
+                if nodeA ~= nodeB then
+                    repulse(nodeA, nodeB);
+                end
+            end
+
+            nodeA:damp(0.95);
+            nodeA:update(dt);
         end
     end
 
