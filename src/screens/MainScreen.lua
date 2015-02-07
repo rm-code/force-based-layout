@@ -49,7 +49,7 @@ function MainScreen.new()
     local timer = 0;
 
     local function addNode(nodes, id)
-        nodes[id] = Node.new(love.mouse.getPosition());
+        nodes[id] = Node.new(love.mouse.getX() + love.math.random(-10, 10), love.mouse.getY() + love.math.random(-10, 10));
         return id + 1;
     end
 
