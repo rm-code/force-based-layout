@@ -33,7 +33,6 @@ local MainScreen = {};
 -- Constants
 -- ------------------------------------------------
 
-local DELAY = 0.2;
 local SPRING = -0.0008;
 local CHARGE = 800;
 
@@ -87,12 +86,7 @@ function MainScreen.new()
 
     function self:update(dt)
         if love.mouse.isDown('l') then
-            if timer <= 0 then
-                id = addNode(nodes, id);
-                timer = DELAY;
-            else
-                timer = timer - dt;
-            end
+            id = addNode(nodes, id);
         end
 
         for idA, nodeA in ipairs(nodes) do
