@@ -45,6 +45,7 @@ function MainScreen.new()
 
     local nodes = {};
     local id = 0;
+    local cursor = Node.new(love.mouse.getX(), love.mouse.getY(), 5);
 
     local function addNode(nodes, id)
         nodes[id] = Node.new(love.mouse.getX() + love.math.random(-10, 10), love.mouse.getY() + love.math.random(-10, 10));
@@ -84,6 +85,8 @@ function MainScreen.new()
     end
 
     function self:update(dt)
+        cursor:setPosition(love.mouse.getPosition());
+
         if love.mouse.isDown('l') then
             id = addNode(nodes, id);
         end
@@ -97,6 +100,7 @@ function MainScreen.new()
                 end
             end
 
+            repulse(nodeA, cursor);
             nodeA:damp(0.95);
             nodeA:update(dt);
         end

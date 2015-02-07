@@ -26,13 +26,14 @@ local Node = {};
 -- Constructor
 -- ------------------------------------------------
 
-function Node.new(x, y)
+function Node.new(x, y, mass)
     local self = {};
 
     local px, py = x, y;
     local vx, vy = 0, 0;
     local ax, ay = 0, 0;
     local radius = love.math.random(5, 15);
+    local mass = mass or radius * 0.01;
     local color = { 17 * radius, 17 * radius, 255 };
 
     ---
@@ -76,7 +77,11 @@ function Node.new(x, y)
     end
 
     function self:getMass()
-        return radius * 0.01;
+        return mass;
+    end
+
+    function self:setPosition(nx, ny)
+        px, py = nx, ny;
     end
 
     return self;
