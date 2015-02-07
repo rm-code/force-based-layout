@@ -33,6 +33,7 @@ function Node.new(x, y)
     local vx, vy = 0, 0;
     local ax, ay = 0, 0;
     local radius = love.math.random(5, 15);
+    local color = { 17 * radius, 17 * radius, 255 };
 
     ---
     -- Apply the calculated acceleration to the node.
@@ -52,7 +53,9 @@ function Node.new(x, y)
     end
 
     function self:draw()
+        love.graphics.setColor(color);
         love.graphics.circle('line', px, py, radius);
+        love.graphics.setColor(255, 255, 255);
     end
 
     function self:applyForce(dx, dy)
