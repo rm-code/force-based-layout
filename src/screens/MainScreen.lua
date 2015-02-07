@@ -45,7 +45,6 @@ function MainScreen.new()
 
     local nodes = {};
     local id = 0;
-    local timer = 0;
 
     local function addNode(nodes, id)
         nodes[id] = Node.new(love.mouse.getX() + love.math.random(-10, 10), love.mouse.getY() + love.math.random(-10, 10));
