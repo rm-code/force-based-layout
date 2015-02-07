@@ -1,5 +1,5 @@
 --==================================================================================================
--- Copyright (C) 2014 - 2015 by Robert Machmer                                                     =
+-- Copyright (C) 2015 by Robert Machmer                                                            =
 --                                                                                                 =
 -- Permission is hereby granted, free of charge, to any person obtaining a copy                    =
 -- of this software and associated documentation files (the "Software"), to deal                   =
@@ -20,69 +20,60 @@
 -- THE SOFTWARE.                                                                                   =
 --==================================================================================================
 
-local Screen = require('lib/screenmanager/Screen');
-local Node = require('src/graph/Node');
+local Node = {};
 
 -- ------------------------------------------------
--- Module
+-- Constants
 -- ------------------------------------------------
 
-local MainScreen = {};
+local RADIUS = 10;
 
 -- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
 
-function MainScreen.new()
-    local self = Screen.new();
+function Node.new(x, y)
+    local self = {};
 
-    local nodes = {};
-    local id = 0;
+    local px, py = x, y;
+    local vx, vy = 0, 0;
+    local ax, ay = 0, 0;
 
-    local function addNode(nodes, id)
-        nodes[id] = Node.new(love.mouse.getPosition());
-        return id + 1;
-    end
+    ---
+    -- Apply the calculated acceleration to the node.
+    --
+    local function move(dt)
+        vx = vx + ax;
+        vy = vy + ay;
 
-    local function gravitate(node, x1, y1, x2, y2)
-        local dx, dy = x1 - x2, y1 - y2;
-        local r = math.sqrt(dx * dx + dy * dy);
+        px = px + vx;
+        py = py + vy;
 
-        -- Normalise vector.
-        dx = dx / r;
-        dy = dy / r;
-
-        local force = 1000 * ((1 * 1) / math.pow(r, 2));
-        force = math.min(force, 1);
-
-        dx = dx * force;
-        dy = dy * force;
-
-        node:applyForce(-dx, -dy);
+        ax, ay = 0, 0;
     end
 
     function self:update(dt)
-        if love.mouse.isDown('l') then
-            id = addNode(nodes, id);
-        end
-
-        for id, node in ipairs(nodes) do
-            gravitate(node, node:getX(), node:getY(), love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5);
-            node:update(dt);
-        end
+        move(dt);
     end
 
     function self:draw()
-        for id, node in ipairs(nodes) do
-            node:draw();
-        end
+        love.graphics.circle('line', px, py, RADIUS);
+    end
+
+    function self:applyForce(dx, dy)
+        ax = ax + dx;
+        ay = ay + dy;
+    end
+
+    function self:getX()
+        return px;
+    end
+
+    function self:getY()
+        return py;
     end
 
     return self;
 end
 
--- ------------------------------------------------
--- Return Module
--- ------------------------------------------------
-
-return MainScreen;
+return Node;
