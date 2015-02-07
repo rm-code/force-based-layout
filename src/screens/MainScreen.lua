@@ -53,7 +53,7 @@ function MainScreen.new()
         return id + 1;
     end
 
-    local function gravitate(node, x1, y1, x2, y2)
+    local function attract(node, x1, y1, x2, y2)
         local dx, dy = x1 - x2, y1 - y2;
         local distance = math.sqrt(dx * dx + dy * dy);
         distance = math.max(0.001, math.min(distance, 100));
@@ -96,7 +96,7 @@ function MainScreen.new()
         end
 
         for idA, nodeA in ipairs(nodes) do
-            gravitate(nodeA, nodeA:getX(), nodeA:getY(), love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5);
+            attract(nodeA, nodeA:getX(), nodeA:getY(), love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5);
 
             for idB, nodeB in ipairs(nodes) do
                 if nodeA ~= nodeB then
