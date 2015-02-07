@@ -34,6 +34,8 @@ local MainScreen = {};
 -- ------------------------------------------------
 
 local DELAY = 0.2;
+local SPRING = -0.0008;
+local CHARGE = 800;
 
 -- ------------------------------------------------
 -- Constructor
@@ -52,7 +54,6 @@ function MainScreen.new()
     end
 
     local function gravitate(node, x1, y1, x2, y2)
-        local k = 0.0008;
         local dx, dy = x1 - x2, y1 - y2;
         local distance = math.sqrt(dx * dx + dy * dy);
         distance = math.max(0.001, math.min(distance, 100));
@@ -62,13 +63,11 @@ function MainScreen.new()
         dy = dy / distance;
 
         -- Calculate spring force and apply it.
-        local force = -k * distance;
+        local force = SPRING * distance;
         node:applyForce(dx * force, dy * force);
     end
 
     local function repulse(a, b)
-        local charge = 800;
-
         -- Calculate distance vector.
         local dx, dy = a:getX() - b:getX(), a:getY() - b:getY();
         local distance = math.sqrt(dx * dx + dy * dy);
@@ -79,7 +78,7 @@ function MainScreen.new()
         dy = dy / distance;
 
         -- Calculate force's strength and apply it to the vector.
-        local strength = charge * ((a:getMass() * b:getMass()) / (distance * distance));
+        local strength = CHARGE * ((a:getMass() * b:getMass()) / (distance * distance));
         dx = dx * strength;
         dy = dy * strength;
 
