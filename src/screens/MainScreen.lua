@@ -68,7 +68,6 @@ function MainScreen.new()
 
     local function repulse(a, b)
         local charge = 800;
-        local mag = 0.2;
 
         -- Calculate distance vector.
         local dx, dy = a:getX() - b:getX(), a:getY() - b:getY();
@@ -80,7 +79,7 @@ function MainScreen.new()
         dy = dy / distance;
 
         -- Calculate force's strength and apply it to the vector.
-        local strength = charge * ((mag * mag) / (distance * distance));
+        local strength = charge * ((a:getMass() * b:getMass()) / (distance * distance));
         dx = dx * strength;
         dy = dy * strength;
 

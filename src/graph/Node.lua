@@ -23,12 +23,6 @@
 local Node = {};
 
 -- ------------------------------------------------
--- Constants
--- ------------------------------------------------
-
-local RADIUS = 10;
-
--- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
 
@@ -38,6 +32,7 @@ function Node.new(x, y)
     local px, py = x, y;
     local vx, vy = 0, 0;
     local ax, ay = 0, 0;
+    local radius = love.math.random(5, 15);
 
     ---
     -- Apply the calculated acceleration to the node.
@@ -57,7 +52,7 @@ function Node.new(x, y)
     end
 
     function self:draw()
-        love.graphics.circle('line', px, py, RADIUS);
+        love.graphics.circle('line', px, py, radius);
     end
 
     function self:applyForce(dx, dy)
@@ -75,6 +70,10 @@ function Node.new(x, y)
 
     function self:damp(f)
         vx, vy = vx * f, vy * f;
+    end
+
+    function self:getMass()
+        return radius * 0.01;
     end
 
     return self;
