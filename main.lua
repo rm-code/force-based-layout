@@ -98,5 +98,7 @@ end
 function love.keypressed(key)
     if key == "f1" then
         debug = not debug;
+    elseif key == ' ' then
+        love.mouse.setVisible(not love.mouse.isVisible());
     end
 end
