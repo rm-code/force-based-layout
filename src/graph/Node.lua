@@ -34,7 +34,10 @@ function Node.new(x, y, mass)
     local ax, ay = 0, 0;
     local radius = love.math.random(5, 15);
     local mass = mass or radius * 0.01;
-    local color = { 17 * radius, 17 * radius, 255 };
+    local color = { r = 17 * radius, g = 17 * radius, b = 255, a = 255 };
+    local age = 0;
+    local maxage = love.math.random(30, 60);
+    local dead = false;
 
     ---
     -- Apply the calculated acceleration to the node.
@@ -50,13 +53,20 @@ function Node.new(x, y, mass)
     end
 
     function self:update(dt)
+        age = age + dt;
+        if age > maxage then
+            color.a = color.a - 30 * dt;
+            if color.a <= 0 then
+                dead = true;
+            end
+        end
         move(dt);
     end
 
     function self:draw()
-        love.graphics.setColor(color);
+        love.graphics.setColor(color.r, color.g, color.b, color.a);
         love.graphics.circle('line', px, py, radius);
-        love.graphics.setColor(255, 255, 255);
+        love.graphics.setColor(255, 255, 255, 255);
     end
 
     function self:applyForce(dx, dy)
@@ -82,6 +92,10 @@ function Node.new(x, y, mass)
 
     function self:setPosition(nx, ny)
         px, py = nx, ny;
+    end
+
+    function self:isDead()
+        return dead;
     end
 
     return self;

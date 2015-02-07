@@ -91,23 +91,28 @@ function MainScreen.new()
             id = addNode(nodes, id);
         end
 
-        for idA, nodeA in ipairs(nodes) do
-            attract(nodeA, nodeA:getX(), nodeA:getY(), love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5);
+        for idA, nodeA in pairs(nodes) do
+            if not nodeA:isDead() then
 
-            for idB, nodeB in ipairs(nodes) do
-                if nodeA ~= nodeB then
-                    repulse(nodeA, nodeB);
+                attract(nodeA, nodeA:getX(), nodeA:getY(), love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5);
+
+                for idB, nodeB in pairs(nodes) do
+                    if nodeA ~= nodeB then
+                        repulse(nodeA, nodeB);
+                    end
                 end
-            end
 
-            repulse(nodeA, cursor);
-            nodeA:damp(0.95);
-            nodeA:update(dt);
+                repulse(nodeA, cursor);
+                nodeA:damp(0.95);
+                nodeA:update(dt);
+            else
+                nodes[idA] = nil;
+            end
         end
     end
 
     function self:draw()
-        for id, node in ipairs(nodes) do
+        for id, node in pairs(nodes) do
             node:draw();
         end
     end
