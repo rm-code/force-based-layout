@@ -30,6 +30,12 @@ local Node = require('src/graph/Node');
 local MainScreen = {};
 
 -- ------------------------------------------------
+-- Constants
+-- ------------------------------------------------
+
+local DELAY = 0.2;
+
+-- ------------------------------------------------
 -- Constructor
 -- ------------------------------------------------
 
@@ -38,6 +44,7 @@ function MainScreen.new()
 
     local nodes = {};
     local id = 0;
+    local timer = 0;
 
     local function addNode(nodes, id)
         nodes[id] = Node.new(love.mouse.getPosition());
@@ -63,7 +70,12 @@ function MainScreen.new()
 
     function self:update(dt)
         if love.mouse.isDown('l') then
-            id = addNode(nodes, id);
+            if timer <= 0 then
+                id = addNode(nodes, id);
+                timer = DELAY;
+            else
+                timer = timer - dt;
+            end
         end
 
         for id, node in ipairs(nodes) do
