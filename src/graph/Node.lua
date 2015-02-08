@@ -26,15 +26,15 @@ local Node = {};
 -- Constructor
 -- ------------------------------------------------
 
-function Node.new(x, y, mass)
+function Node.new(x, y, radius, mass, col)
     local self = {};
 
     local px, py = x, y;
     local vx, vy = 0, 0;
     local ax, ay = 0, 0;
-    local radius = love.math.random(5, 15);
+    local radius = radius or love.math.random(5, 15);
     local mass = mass or radius * 0.01;
-    local color = { r = 17 * radius, g = 17 * radius, b = 255, a = 255 };
+    local color = col or { r = 17 * radius, g = 17 * radius, b = 255, a = 255 };
     local age = 0;
     local maxage = love.math.random(30, 60);
     local dead = false;

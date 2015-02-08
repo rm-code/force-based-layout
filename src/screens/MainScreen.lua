@@ -45,7 +45,11 @@ function MainScreen.new()
 
     local nodes = {};
     local id = 0;
-    local cursor = Node.new(love.mouse.getX(), love.mouse.getY(), 5);
+
+    local useCursor = true;
+    local cursor = Node.new(love.mouse.getX(), love.mouse.getY(), 4, 5, { r = 100, g = 200, b = 0, a = 255 });
+    cursor:setPosition(love.mouse.getPosition());
+    love.mouse.setVisible(false);
 
     local function addNode(nodes, id)
         nodes[id] = Node.new(love.mouse.getX() + love.math.random(-10, 10), love.mouse.getY() + love.math.random(-10, 10));
@@ -85,7 +89,9 @@ function MainScreen.new()
     end
 
     function self:update(dt)
-        cursor:setPosition(love.mouse.getPosition());
+        if useCursor then
+            cursor:setPosition(love.mouse.getPosition());
+        end
 
         if love.mouse.isDown('l') then
             id = addNode(nodes, id);
@@ -102,7 +108,9 @@ function MainScreen.new()
                     end
                 end
 
-                repulse(nodeA, cursor);
+                if useCursor then
+                    repulse(nodeA, cursor);
+                end
                 nodeA:damp(0.95);
                 nodeA:update(dt);
             else
@@ -114,6 +122,15 @@ function MainScreen.new()
     function self:draw()
         for id, node in pairs(nodes) do
             node:draw();
+        end
+        if useCursor then
+            cursor:draw();
+        end
+    end
+
+    function self:keypressed(key)
+        if key == ' ' then
+            useCursor = not useCursor;
         end
     end
 
