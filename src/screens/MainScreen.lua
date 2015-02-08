@@ -30,11 +30,11 @@ local Node = require('src/graph/Node');
 local MainScreen = {};
 
 -- ------------------------------------------------
--- Constants
+-- Local Variables
 -- ------------------------------------------------
 
-local SPRING = -0.0008;
-local CHARGE = 800;
+local spring = -0.0008;
+local charge = 800;
 
 -- ------------------------------------------------
 -- Constructor
@@ -66,7 +66,7 @@ function MainScreen.new()
         dy = dy / distance;
 
         -- Calculate spring force and apply it.
-        local force = SPRING * distance;
+        local force = spring * distance;
         node:applyForce(dx * force, dy * force);
     end
 
@@ -81,7 +81,7 @@ function MainScreen.new()
         dy = dy / distance;
 
         -- Calculate force's strength and apply it to the vector.
-        local strength = CHARGE * ((a:getMass() * b:getMass()) / (distance * distance));
+        local strength = charge * ((a:getMass() * b:getMass()) / (distance * distance));
         dx = dx * strength;
         dy = dy * strength;
 
@@ -131,6 +131,14 @@ function MainScreen.new()
     function self:keypressed(key)
         if key == ' ' then
             useCursor = not useCursor;
+        elseif key == '+' then
+            charge = charge + 200;
+        elseif key == '-' then
+            charge = charge - 200;
+        elseif key == 'w' then
+            spring = spring * 1.1;
+        elseif key == 's' then
+            spring = spring / 1.1;
         end
     end
 
