@@ -20,87 +20,85 @@
 -- THE SOFTWARE.                                                                                   =
 --==================================================================================================
 
-local GAME_TITLE    = "Force-Based Layout";
-local GAME_IDENTITY = "rmcode_fdg";
-local GAME_VERSION  = "0022";
-
-local LOVE_VERSION  = "0.9.2";
+local Node = {};
 
 -- ------------------------------------------------
--- Local variables
+-- Constructor
 -- ------------------------------------------------
 
-local config;
+function Node.new(x, y, radius, mass, col)
+    local self = {};
 
--- ------------------------------------------------
--- Global Functions
--- ------------------------------------------------
+    local px, py = x, y;
+    local vx, vy = 0, 0;
+    local ax, ay = 0, 0;
+    local radius = radius or love.math.random(5, 15);
+    local mass = mass or radius * 0.01;
+    local color = col or { r = 17 * radius, g = 17 * radius, b = 255, a = 255 };
+    local age = 0;
+    local maxage = love.math.random(30, 60);
+    local dead = false;
 
----
--- Initialise löve's config file.
--- @param _conf
---
-function love.conf(t)
-    t.identity = GAME_IDENTITY;
-    t.version = LOVE_VERSION;
-    t.console = true;
+    ---
+    -- Apply the calculated acceleration to the node.
+    --
+    local function move(dt)
+        vx = vx + ax;
+        vy = vy + ay;
 
-    t.window.title = GAME_TITLE;
-    t.window.icon = nil;
-    t.window.width = 0;
-    t.window.height = 0;
-    t.window.borderless = false;
-    t.window.resizable = true;
-    t.window.minwidth = 800;
-    t.window.minheight = 600;
-    t.window.fullscreen = false;
-    t.window.fullscreentype = "normal";
-    t.window.vsync = true;
-    t.window.fsaa = 0;
-    t.window.display = 1;
-    t.window.highdpi = false;
-    t.window.srgb = false;
+        px = px + vx;
+        py = py + vy;
 
-    t.modules.audio = true;
-    t.modules.event = true;
-    t.modules.graphics = true;
-    t.modules.image = true;
-    t.modules.joystick = true;
-    t.modules.keyboard = true;
-    t.modules.math = true;
-    t.modules.mouse = true;
-    t.modules.physics = true;
-    t.modules.sound = true;
-    t.modules.system = true;
-    t.modules.timer = true;
-    t.modules.window = true;
-
-    config = t;
-end
-
----
--- Returns the config file.
---
-function getConfig()
-    if config then
-        return config;
+        ax, ay = 0, 0;
     end
+
+    function self:update(dt)
+        age = age + dt;
+        if age > maxage then
+            color.a = color.a - 30 * dt;
+            if color.a <= 0 then
+                dead = true;
+            end
+        end
+        move(dt);
+    end
+
+    function self:draw()
+        love.graphics.setColor(color.r, color.g, color.b, color.a);
+        love.graphics.circle('line', px, py, radius);
+        love.graphics.setColor(255, 255, 255, 255);
+    end
+
+    function self:applyForce(dx, dy)
+        ax = ax + dx;
+        ay = ay + dy;
+    end
+
+    function self:getX()
+        return px;
+    end
+
+    function self:getY()
+        return py;
+    end
+
+    function self:damp(f)
+        vx, vy = vx * f, vy * f;
+    end
+
+    function self:getMass()
+        return mass;
+    end
+
+    function self:setPosition(nx, ny)
+        px, py = nx, ny;
+    end
+
+    function self:isDead()
+        return dead;
+    end
+
+    return self;
 end
 
----
--- Returns the game's version.
---
-function getVersion()
-    if GAME_VERSION then
-        return GAME_VERSION;
-    end
-end
-
----
--- Returns the title.
---
-function getTitle()
-    if GAME_TITLE then
-        return GAME_TITLE;
-    end
-end
+return Node;
