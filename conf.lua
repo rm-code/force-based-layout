@@ -22,7 +22,7 @@
 
 local GAME_TITLE    = "Force-Based Layout";
 local GAME_IDENTITY = "rmcode_fdg";
-local GAME_VERSION  = "0000";
+local GAME_VERSION  = "0022";
 
 local LOVE_VERSION  = "0.9.2";
 
