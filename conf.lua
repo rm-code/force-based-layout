@@ -20,7 +20,7 @@
 -- THE SOFTWARE.                                                                                   =
 --==================================================================================================
 
-local GAME_TITLE    = "Force-Directed Graph";
+local GAME_TITLE    = "Force-Based Layout";
 local GAME_IDENTITY = "rmcode_fdg";
 local GAME_VERSION  = "0000";
 
