@@ -58,6 +58,7 @@ function Node.new(x, y, radius, mass, col)
             color.a = color.a - 30 * dt;
             if color.a <= 0 then
                 dead = true;
+                color.a = 0;
             end
         end
         move(dt);
