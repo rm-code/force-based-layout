@@ -24,9 +24,6 @@ function MainScreen.new()
     local nodes = {};
     local id = 0;
 
-    local useCursor = true;
-    local cursor = Node.new( love.mouse.getX(), love.mouse.getY(), 4, 5, { r = 100, g = 200, b = 0, a = 255 } );
-    cursor:setPosition( love.mouse.getPosition() );
     love.mouse.setVisible( false );
 
     local function addNode()
@@ -67,14 +64,6 @@ function MainScreen.new()
     end
 
     function self:update( dt )
-        if useCursor then
-            cursor:setPosition( love.mouse.getPosition() );
-        end
-
-        if love.mouse.isDown( 1 ) then
-            id = addNode( nodes, id );
-        end
-
         for idA, nodeA in pairs( nodes ) do
             if not nodeA:isDead() then
 
@@ -86,9 +75,6 @@ function MainScreen.new()
                     end
                 end
 
-                if useCursor then
-                    repulse( nodeA, cursor );
-                end
                 nodeA:damp( 0.95 );
                 nodeA:update( dt );
             else
@@ -101,15 +87,10 @@ function MainScreen.new()
         for _, node in pairs( nodes ) do
             node:draw();
         end
-        if useCursor then
-            cursor:draw();
-        end
     end
 
     function self:keypressed( key )
-        if key == 'space' then
-            useCursor = not useCursor;
-        elseif key == '+' then
+        if key == '+' then
             charge = charge + 200;
         elseif key == '-' then
             charge = charge - 200;
