@@ -121,6 +121,8 @@ function MainScreen.new()
             spring = spring * 1.1;
         elseif key == 's' then
             spring = spring / 1.1;
+        elseif key == 'escape' then
+            love.event.quit();
         end
     end
 
