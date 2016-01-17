@@ -4,23 +4,25 @@ local Node = {};
 -- Constructor
 -- ------------------------------------------------
 
-function Node.new(x, y, radius, mass, col)
+function Node.new( x, y, radius, mass, color )
     local self = {};
 
     local px, py = x, y;
     local vx, vy = 0, 0;
     local ax, ay = 0, 0;
-    local radius = radius or love.math.random(5, 15);
-    local mass = mass or radius * 0.01;
-    local color = col or { r = 17 * radius, g = 17 * radius, b = 255, a = 255 };
-    local age = 0;
-    local maxage = love.math.random(30, 60);
-    local dead = false;
+    local age    = 0;
+    local maxage = love.math.random( 30, 60 );
+    local dead   = false;
+
+    radius = radius or love.math.random( 5, 15 );
+    mass   = mass   or radius * 0.01;
+    
+    color  = color  or { r = 17 * radius, g = 17 * radius, b = 255, a = 255 };
 
     ---
     -- Apply the calculated acceleration to the node.
     --
-    local function move(dt)
+    local function move()
         vx = vx + ax;
         vy = vy + ay;
 
@@ -30,7 +32,7 @@ function Node.new(x, y, radius, mass, col)
         ax, ay = 0, 0;
     end
 
-    function self:update(dt)
+    function self:update( dt )
         age = age + dt;
         if age > maxage then
             color.a = color.a - 30 * dt;
@@ -39,16 +41,16 @@ function Node.new(x, y, radius, mass, col)
                 color.a = 0;
             end
         end
-        move(dt);
+        move( dt );
     end
 
     function self:draw()
-        love.graphics.setColor(color.r, color.g, color.b, color.a);
-        love.graphics.circle('line', px, py, radius);
-        love.graphics.setColor(255, 255, 255, 255);
+        love.graphics.setColor( color.r, color.g, color.b, color.a );
+        love.graphics.circle( 'line', px, py, radius );
+        love.graphics.setColor( 255, 255, 255, 255 );
     end
 
-    function self:applyForce(dx, dy)
+    function self:applyForce( dx, dy )
         ax = ax + dx;
         ay = ay + dy;
     end
@@ -61,7 +63,7 @@ function Node.new(x, y, radius, mass, col)
         return py;
     end
 
-    function self:damp(f)
+    function self:damp( f )
         vx, vy = vx * f, vy * f;
     end
 
@@ -69,7 +71,7 @@ function Node.new(x, y, radius, mass, col)
         return mass;
     end
 
-    function self:setPosition(nx, ny)
+    function self:setPosition( nx, ny )
         px, py = nx, ny;
     end
 

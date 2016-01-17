@@ -25,19 +25,19 @@ function MainScreen.new()
     local id = 0;
 
     local useCursor = true;
-    local cursor = Node.new(love.mouse.getX(), love.mouse.getY(), 4, 5, { r = 100, g = 200, b = 0, a = 255 });
-    cursor:setPosition(love.mouse.getPosition());
-    love.mouse.setVisible(false);
+    local cursor = Node.new( love.mouse.getX(), love.mouse.getY(), 4, 5, { r = 100, g = 200, b = 0, a = 255 } );
+    cursor:setPosition( love.mouse.getPosition() );
+    love.mouse.setVisible( false );
 
-    local function addNode(nodes, id)
-        nodes[id] = Node.new(love.mouse.getX() + love.math.random(-10, 10), love.mouse.getY() + love.math.random(-10, 10));
+    local function addNode()
+        nodes[id] = Node.new( love.mouse.getX() + love.math.random( -10, 10 ), love.mouse.getY() + love.math.random( -10, 10 ));
         return id + 1;
     end
 
-    local function attract(node, x1, y1, x2, y2)
+    local function attract( node, x1, y1, x2, y2 )
         local dx, dy = x1 - x2, y1 - y2;
-        local distance = math.sqrt(dx * dx + dy * dy);
-        distance = math.max(0.001, math.min(distance, 100));
+        local distance = math.sqrt( dx * dx + dy * dy );
+        distance = math.max( 0.001, math.min( distance, 100 ));
 
         -- Normalise vector.
         dx = dx / distance;
@@ -45,52 +45,52 @@ function MainScreen.new()
 
         -- Calculate spring force and apply it.
         local force = spring * distance;
-        node:applyForce(dx * force, dy * force);
+        node:applyForce( dx * force, dy * force );
     end
 
-    local function repulse(a, b)
+    local function repulse( a, b )
         -- Calculate distance vector.
         local dx, dy = a:getX() - b:getX(), a:getY() - b:getY();
-        local distance = math.sqrt(dx * dx + dy * dy);
-        distance = math.max(0.001, math.min(distance, 1000));
+        local distance = math.sqrt( dx * dx + dy * dy );
+        distance = math.max( 0.001, math.min( distance, 1000 ));
 
         -- Normalise vector.
         dx = dx / distance;
         dy = dy / distance;
 
         -- Calculate force's strength and apply it to the vector.
-        local strength = charge * ((a:getMass() * b:getMass()) / (distance * distance));
+        local strength = charge * (( a:getMass() * b:getMass() ) / ( distance * distance ));
         dx = dx * strength;
         dy = dy * strength;
 
-        a:applyForce(dx, dy);
+        a:applyForce( dx, dy );
     end
 
-    function self:update(dt)
+    function self:update( dt )
         if useCursor then
-            cursor:setPosition(love.mouse.getPosition());
+            cursor:setPosition( love.mouse.getPosition() );
         end
 
-        if love.mouse.isDown(1) then
-            id = addNode(nodes, id);
+        if love.mouse.isDown( 1 ) then
+            id = addNode( nodes, id );
         end
 
-        for idA, nodeA in pairs(nodes) do
+        for idA, nodeA in pairs( nodes ) do
             if not nodeA:isDead() then
 
-                attract(nodeA, nodeA:getX(), nodeA:getY(), love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5);
+                attract( nodeA, nodeA:getX(), nodeA:getY(), love.graphics.getWidth() * 0.5, love.graphics.getHeight() * 0.5 );
 
-                for idB, nodeB in pairs(nodes) do
+                for _, nodeB in pairs( nodes ) do
                     if nodeA ~= nodeB then
-                        repulse(nodeA, nodeB);
+                        repulse( nodeA, nodeB );
                     end
                 end
 
                 if useCursor then
-                    repulse(nodeA, cursor);
+                    repulse( nodeA, cursor );
                 end
-                nodeA:damp(0.95);
-                nodeA:update(dt);
+                nodeA:damp( 0.95 );
+                nodeA:update( dt );
             else
                 nodes[idA] = nil;
             end
@@ -98,7 +98,7 @@ function MainScreen.new()
     end
 
     function self:draw()
-        for id, node in pairs(nodes) do
+        for _, node in pairs( nodes ) do
             node:draw();
         end
         if useCursor then
@@ -106,7 +106,7 @@ function MainScreen.new()
         end
     end
 
-    function self:keypressed(key)
+    function self:keypressed( key )
         if key == 'space' then
             useCursor = not useCursor;
         elseif key == '+' then
