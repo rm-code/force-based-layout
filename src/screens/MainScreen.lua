@@ -1,4 +1,5 @@
 local Screen = require('lib/screenmanager/Screen');
+local Queue = require('src.Queue');
 local Node = require('src/graph/Node');
 
 -- ------------------------------------------------
@@ -11,6 +12,7 @@ local MainScreen = {};
 -- Local Variables
 -- ------------------------------------------------
 
+local MAX_NODES = 300;
 local spring = -0.0008;
 local charge = 800;
 
@@ -21,14 +23,26 @@ local charge = 800;
 function MainScreen.new()
     local self = Screen.new();
 
-    local nodes = {};
-    local id = 0;
+    local spawnDelay;
 
-    love.mouse.setVisible( false );
+    local queue;
+    local nodes;
 
-    local function addNode()
-        nodes[id] = Node.new( love.mouse.getX() + love.math.random( -10, 10 ), love.mouse.getY() + love.math.random( -10, 10 ));
-        return id + 1;
+    function self:init()
+        love.mouse.setVisible( false );
+
+        spawnDelay = 1;
+
+        queue = Queue.new();
+        local id = 1;
+
+        for _ = 1, MAX_NODES do
+            local sx, sy = love.math.random( 0, love.graphics.getWidth() ), love.math.random( 0, love.graphics.getHeight() );
+            queue:enqueue( Node.new( id, sx, sy ));
+            id = id + 1;
+        end
+
+        nodes = {};
     end
 
     local function attract( node, x1, y1, x2, y2 )
@@ -64,6 +78,13 @@ function MainScreen.new()
     end
 
     function self:update( dt )
+        spawnDelay = spawnDelay + dt;
+        if not ( queue:isEmpty() ) and spawnDelay > 0.2 then
+            local node = queue:dequeue();
+            nodes[node:getID()] = node;
+            spawnDelay = 0;
+        end
+
         for idA, nodeA in pairs( nodes ) do
             if not nodeA:isDead() then
 
@@ -78,6 +99,8 @@ function MainScreen.new()
                 nodeA:damp( 0.95 );
                 nodeA:update( dt );
             else
+                nodes[idA]:reset();
+                queue:enqueue( nodes[idA] );
                 nodes[idA] = nil;
             end
         end
