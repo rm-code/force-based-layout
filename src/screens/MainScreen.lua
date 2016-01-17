@@ -71,7 +71,7 @@ function MainScreen.new()
             cursor:setPosition(love.mouse.getPosition());
         end
 
-        if love.mouse.isDown('l') then
+        if love.mouse.isDown(1) then
             id = addNode(nodes, id);
         end
 
@@ -107,7 +107,7 @@ function MainScreen.new()
     end
 
     function self:keypressed(key)
-        if key == ' ' then
+        if key == 'space' then
             useCursor = not useCursor;
         elseif key == '+' then
             charge = charge + 200;
